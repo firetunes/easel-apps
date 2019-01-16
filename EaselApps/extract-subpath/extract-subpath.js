@@ -1,4 +1,3 @@
-    
     var makerjs = require('makerjs');
     var meapi = require('makerjs-easel-api');
     var selectedVolumes;
@@ -107,7 +106,7 @@
       var svgmodels = {models: {}};
       svgmodels.models.curve = {
         model: chainmodel,
-        cut: {type: "outline", outlineStyle: "on-path", depth: args.volumes[0].cut.depth},
+        cut: {type: "outline", outlineStyle: "on-path", depth: selectedVolumes[0].cut.depth},
         origin: [0,0]
       };
       

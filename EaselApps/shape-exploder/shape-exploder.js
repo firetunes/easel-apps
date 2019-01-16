@@ -64,8 +64,12 @@
         modelitr++;
       }
       
-      modelarr.sort((a,b) => (a.area > b.area) ? -1 : ((b.area > a.area) ? 1 : 0)); 
-      
+      // Arrows don't work in IE11
+      //modelarr.sort((a,b) => (a.area > b.area) ? -1 : ((b.area > a.area) ? 1 : 0)); 
+      modelarr.sort(function (a, b) {
+        return a.area > b.area ? -1 : b.area > a.area ? 1 : 0;
+      });
+
       for (var i = 0; i < modelarr.length; i++) {
         svgmodels.models[i] = {
           model: modelarr[i].model,

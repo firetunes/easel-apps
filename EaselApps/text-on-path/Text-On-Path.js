@@ -36,7 +36,8 @@
       
       var props = [
         //{type: 'file-input', id: "Local Font"},
-        //{type: 'text', id: "Font URL", value: ""},
+        {type: 'text', id: "Font URL", value: ""},
+        {type: 'list', id: "Cut Type", value: "fill", options: ["fill", "outline"]},
         {type: 'list', id: "Font", value: fontlist[0], options: fontlist},
         {type: 'boolean', id: "Fix Dark Areas in Text", value: false},
         {type: 'range', id: "Font Size", value: 1, min: 0, max: 10, step: 0.1},
@@ -48,6 +49,7 @@
         {type: 'range', id: "Baseline", value: 0, min: -2, max: 2, step: 0.001},
         {type: 'range', id: "Path Start Percent", value: 0, min: 0, max: 100, step: 0.1},
         {type: 'range', id: "Path End Percent", value: 100, min: 0, max: 100, step: 0.1},
+        {type: 'boolean', id: "Force Single Shape Output", value: true},
         {type: 'boolean', id: "Isolate Text", value: false}
         //{type: 'range', id: "Cycle", value: 0, min: -100, max: 100, step: 1}
       ];
@@ -84,9 +86,10 @@
         selectedfont = params["Font"];
         var fontselector = params["Font"].split("-");
         var fonturl = gfonts[fontselector[0].trim()]["variants"][fontselector[1].trim()][fontselector[2].trim()]["url"]["ttf"];
-        //if(params["Font URL"] !== "") {
-        //  fonturl = params["Font URL"];
-        //}
+        //console.log(params["Font URL"], params["Font URL"] !== "");
+        if(params["Font URL"] !== "") {
+          fonturl = params["Font URL"];
+        }
         opentype.load(fonturl, function(err, font) {
           if (err) {
             failure("Could not load font"); return false;
@@ -100,8 +103,18 @@
       }
       if (loadedfont === null){ failure("Font Loading"); return false; }
       
-      
+      //console.log(selectedVolumes[0]);
       var easelPath = selectedVolumes[0].shape;
+      // Has issues with single lines... idk why.... code below fixes issue.
+      if(easelPath.type === "path" && easelPath.points[0].length === 2) {
+        if(Object.keys(easelPath.points[0][0]).length === 2 && Object.keys(easelPath.points[0][1]).length === 2) {
+          var newpointarr = [];
+          newpointarr.push({x: easelPath.points[0][0].x, y: easelPath.points[0][0].y});
+          newpointarr.push({x: (easelPath.points[0][0].x + easelPath.points[0][1].x) / 2, y: (easelPath.points[0][0].y + easelPath.points[0][1].y) / 2});
+          newpointarr.push({x: easelPath.points[0][1].x, y: easelPath.points[0][1].y});
+          easelPath.points[0] = newpointarr;
+        }
+      }
       var makerPath = meapi.importEaselShape(easelPath);
       var measurementPath = makerjs.measure.modelExtents(makerPath);
       var pathchain = makerjs.model.findSingleChain(makerPath);
@@ -141,7 +154,7 @@
       var models = {};
       models.row = {
         model: textModel,
-        cut: {type: "fill", depth: Depth},
+        cut: {type: params["Cut Type"], outlineStyle: "on-path", depth: Depth, tabPreference: false},
         origin: [0,0]
       };
       
@@ -175,6 +188,7 @@
               var left_in = (measureA.low[0] > measureB.low[0]);
               if(top_in && bot_in && right_in && left_in) {
                 svgmodels.models[A].cut.depth = 0;
+                svgmodels.models[A].cut.remove = true;
               }
             }
           }
@@ -184,11 +198,11 @@
         svgmodels.models["Text"] = models.row;
       }
       
-      
       if(!params["Isolate Text"]) {
         volumes = args.volumes;
       }
       
+      var newVolumes = [];
       for (var key in svgmodels.models) {
         var measurement = makerjs.measure.modelExtents(svgmodels.models[key].model);
         var allPoints = meapi.exportModelToEaselPointArray(svgmodels.models[key].model);
@@ -204,11 +218,33 @@
             width: measurement.width,
             height: measurement.height,
             rotation: 0
-          }
+          },
+          //test: "Test Data" <-- Save original path data and settings
         }; 
         volume.cut = svgmodels.models[key].cut;
-        volumes.push(volume);
+        newVolumes.push(volume);
       }
+      
+      if(params["Fix Dark Areas in Text"] && params["Force Single Shape Output"]) {
+        var subjectVolumes = [];
+        var clipVolumes = [];
+        
+        for (i = 0; i < newVolumes.length; i++) {
+          subjectVolumes.push(newVolumes[i]); 
+          if (typeof newVolumes[i].cut.remove === 'undefined') {
+            clipVolumes.push(newVolumes[i]);
+          }
+        }
+        var nvolume = EASEL.volumeHelper.intersect(subjectVolumes, clipVolumes);
+        
+        nvolume.cut = { depth: Depth, type: params["Cut Type"], outlineStyle: 'on-path', tabPreference: false };
+        newVolumes = [nvolume];
+      }
+      
+      for(i = 0; i < newVolumes.length; i++) {
+        volumes.push(newVolumes[i]);
+      }
+      
       
       success(volumes);
     };
