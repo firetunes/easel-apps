@@ -40,7 +40,7 @@
         {type: 'range', id: "Y Translate", value: 0, min: -50, max: 50},
         {type: 'range', id: "X Padding", value: 0, min: -50, max: 200},
         {type: 'range', id: "Y Padding", value: 0, min: -50, max: 200},
-        {type: 'range', id: "Offset", value: 0, min: -.1, max: .1, step: 0.001},
+        {type: 'range', id: "Texture Offset", value: 0, min: -.1, max: .1, step: 0.001},
         {type: 'range', id: "Texture Margin", value: 0, min: 0, max: 1, step: 0.001},
         {type: 'range', id: "Source Depth", value: 0, min:0, max:material.dimensions.z, step:0.001},
         {type: 'range', id: "Texture Depth", value: material.dimensions.z, min:0, max:material.dimensions.z, step:0.001}
@@ -111,7 +111,7 @@
       volume_texture.shape.center.x = targetVolume.shape.center.x + (pathVolume.shape.width * params["Scale X"] * params["X Translate"] / 100);
       volume_texture.shape.center.y = targetVolume.shape.center.y + (pathVolume.shape.height * params["Scale Y"] * params["Y Translate"] / 100);
       
-      var volume_offset = EASEL.volumeHelper.expand([volume_texture], params["Offset"]);
+      var volume_offset = EASEL.volumeHelper.expand([volume_texture], params["Texture Offset"]);
       
       var target_offset = EASEL.volumeHelper.expand([selectedVolumes[0]], params["Texture Margin"] * -1);
       
