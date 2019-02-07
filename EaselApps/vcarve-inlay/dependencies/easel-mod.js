@@ -336,13 +336,23 @@ EASEL.volumeHelper = (function() {
     });
   };
   
-  expand = function(subjectVolumes, delta) {
+  expand = function(subjectVolumes, delta, jointype) {
 	  var clipper = new ClipperLib.ClipperOffset();
 	  
+	  jointype = jointype || ClipperLib.JoinType.jtMiter;
+	  
 	  subjectLines = flatMap(subjectVolumes.map(toSegments));
-	  clipper.AddPaths(subjectLines, ClipperLib.JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+	  clipper.AddPaths(subjectLines, jointype, ClipperLib.EndType.etClosedPolygon);
 	  var solution = new ClipperLib.Paths();
 	  clipper.Execute(solution, delta * scale);
+	  
+	  solution = ClipperLib.JS.Lighten(solution, lightenThreshold);
+      if (solution.length > 0 && solution[0].length > 0) {
+        solution.forEach(function(polygon) {
+          polygon.push(polygon[0]); // re-close the path
+        });
+      }
+	  
 	  solution = solution.map(scaleDownLine);
 	  
 	  return EASEL.pathUtils.fromPointArrays(solution);

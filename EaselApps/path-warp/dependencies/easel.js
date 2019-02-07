@@ -1,5 +1,3 @@
-/* Added clipper options */
-
 EASEL = {};
 
 var slice = [].slice;
@@ -130,7 +128,7 @@ EASEL.linearizer = (function() {
 }).call(this);
 
 EASEL.volumeHelper = (function() {
-  var boundingBoxBottom, boundingBoxHeight, boundingBoxHorizontalCenter, boundingBoxLeft, boundingBoxRight, boundingBoxTop, boundingBoxVerticalCenter, boundingBoxWidth, shapeBoundingBoxBottom, shapeBoundingBoxLeft, shapeBoundingBoxRight, shapeBoundingBoxTop, boundingBox, intersect, expand, offset;
+  var boundingBoxBottom, boundingBoxHeight, boundingBoxHorizontalCenter, boundingBoxLeft, boundingBoxRight, boundingBoxTop, boundingBoxVerticalCenter, boundingBoxWidth, shapeBoundingBoxBottom, shapeBoundingBoxLeft, shapeBoundingBoxRight, shapeBoundingBoxTop, boundingBox, intersect, offset;
 
   boundingBox = function(volumes) {
     var box = {
@@ -335,29 +333,8 @@ EASEL.volumeHelper = (function() {
       return newVolume;
     });
   };
-  
-  expand = function(subjectVolumes, delta) {
-	  var clipper = new ClipperLib.ClipperOffset();
-	  
-	  subjectLines = flatMap(subjectVolumes.map(toSegments));
-	  clipper.AddPaths(subjectLines, ClipperLib.JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
-	  var solution = new ClipperLib.Paths();
-	  clipper.Execute(solution, delta * scale);
-	  
-	  solution = ClipperLib.JS.Lighten(solution, lightenThreshold);
-      if (solution.length > 0 && solution[0].length > 0) {
-        solution.forEach(function(polygon) {
-          polygon.push(polygon[0]); // re-close the path
-        });
-      }
-	  
-	  solution = solution.map(scaleDownLine);
-	  
-	  return EASEL.pathUtils.fromPointArrays(solution);
-  };
 
-  intersect = function(subjectVolumes, clipVolumes, operation) {
-	operation = operation || 0;
+  intersect = function(subjectVolumes, clipVolumes) {
     var clipper = new ClipperLib.Clipper();
 
     subjectLines = flatMap(subjectVolumes.map(toSegments));
@@ -374,7 +351,7 @@ EASEL.volumeHelper = (function() {
 
     var solution = new ClipperLib.Paths();
 
-    clipper.Execute(operation, solution);
+    clipper.Execute(ClipperLib.ClipType.ctIntersection, solution);
 
     solution = solution.map(scaleDownLine);
 
@@ -392,7 +369,6 @@ EASEL.volumeHelper = (function() {
     boundingBoxWidth: boundingBoxWidth,
     boundingBoxHeight: boundingBoxHeight,
     intersect: intersect,
-	expand: expand,
     offset: offset
   };
 })();
