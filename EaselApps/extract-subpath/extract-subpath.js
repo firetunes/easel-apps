@@ -21,9 +21,9 @@
       selectedVolumes = getSelectedVolumes(args.volumes, args.selectedVolumeIds);
       
       var props = [
-        {type: 'list', id: "StartPoint", value: "Default", options: ["Default", "Left", "Top", "Right", "Bottom"]},
-        {type: 'range', id: "LeftStart", value: 0, min: 0, max: 100, step: 0.1},
-        {type: 'range', id: "RightStart", value: 100, min: 0, max: 100, step: 0.1},
+        {type: 'list', id: "Start Point", value: "Default", options: ["Default", "Left", "Top", "Right", "Bottom"]},
+        {type: 'range', id: "Start at {x}%", value: 0, min: 0, max: 100, step: 0.1},
+        {type: 'range', id: "End at {x}%", value: 100, min: 0, max: 100, step: 0.1},
         {type: 'boolean', id: "Reverse", value: false}
       ];
       
@@ -45,9 +45,26 @@
     var executor2 = function(args, success, failure) {
       var params = args.params;
       var material = args.material;
-      var LeftStart = params["LeftStart"];
-      var RightStart = params["RightStart"];
+      var LeftStart = params["Start at {x}%"];
+      var RightStart = params["End at {x}%"];
+      var divisions = 1000;
       var volumes = [];
+      
+      var MinLen = Math.round(divisions / 10000 * 3 * 10) / 10;
+      if(RightStart < (LeftStart + MinLen)) {
+        failure("Right Offset must be greater than left offset by " + (MinLen).toString());
+        return false;
+      }
+      
+      if(selectedVolumes.length > 1) {
+        failure("Please select only 1 volume.");
+        return false;
+      }
+      
+      if(selectedVolumes[0].shape.type == "drill") {
+        failure("Cannot extract subpath from drill point.");
+        return false;
+      }
       
       var easelPath = selectedVolumes[0].shape;
       var makerPath = meapi.importEaselShape(easelPath);
@@ -57,9 +74,8 @@
       //makerjs.chain.cycle(pathchain, params["Cycle"]);
       
       var i; var j;
-      var divisions = 1000;
       var points = makerjs.chain.toPoints(pathchain, pathchain.pathLength / divisions);
-      if(params["StartPoint"] != "Default") {
+      if(params["Start Point"] != "Default") {
         var xvalues = points.map(function(elt) { return elt[0]; });
         var yvalues = points.map(function(elt) { return elt[1]; });
         
@@ -70,7 +86,7 @@
         
         var shifting = true;
         while (shifting) {
-          switch(params["StartPoint"]) {
+          switch(params["Start Point"]) {
             case "Left":
               if(points[0][0] == x_min) { shifting = false; }
               break;
@@ -113,6 +129,22 @@
       for (var key in svgmodels.models) {
         var measurement = makerjs.measure.modelExtents(svgmodels.models[key].model);
         var allPoints = meapi.exportModelToEaselPointArray(svgmodels.models[key].model);
+        
+        // point reduction
+        var newPoints = [];
+        newPoints.push(allPoints[0][0]);
+        
+        //var PrevSlope = null;
+        for(var i = 1; i < allPoints[0].length - 1; i++) {
+          var slopeprev = GetSlope(allPoints[0][i-1],allPoints[0][i]);
+          var slopenext = GetSlope(allPoints[0][i],allPoints[0][i+1]);
+          if(Math.abs(slopeprev - slopenext) > 0.000000001) {
+            newPoints.push(allPoints[0][i]);
+          }
+        }
+        newPoints.push(allPoints[0][allPoints[0].length - 1]);
+        allPoints = [newPoints];
+        
         var volume = {
           shape: {
             type: "path",
@@ -133,3 +165,9 @@
       
       success(volumes);
     };
+    
+    function GetSlope(P1, P2) {
+      if(P2.x == P1.x) {return Number.POSITIVE_INFINITY;}
+      var m = (P2.y - P1.y) / (P2.x - P1.x);
+      return m;
+    }

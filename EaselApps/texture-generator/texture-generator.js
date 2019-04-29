@@ -66,6 +66,12 @@
       var selectedVolumes = getSelectedVolumes(args.volumes, args.selectedVolumeIds);
       if(selectedVolumes.length > 1) {failure("Please select only 1 shape."); return false;}
       
+      //"rectangle", "ellipse", "polygon", "path", "polyline", "line", "drill"
+      if(selectedVolumes[0].shape.type == "drill" || selectedVolumes[0].shape.type == "line") {
+        failure("Selected shape cannot be textured.");
+        return false;
+      }
+      
       var pathData = textures[params["Texture"]];
       if(params["Custom Texture"] !== "") {pathData = params["Custom Texture"];}
       if(params["Scale Y = Scale X"]) {params["Scale Y"] = params["Scale X"];}

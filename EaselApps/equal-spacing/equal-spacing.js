@@ -4,7 +4,8 @@
     var i;
     var j;
     var properties = [
-      {type: 'list', id:"Spacing Type", value: "Vertical", options:["Vertical", "Horizontal", "Both"]},
+      {type: 'list', id:"Spacing Direction", value: "Vertical", options:["Vertical", "Horizontal", "Both"]},
+      {type: 'list', id: "Spacing Type", value: "On Center", options:["On Center", "Space Between"]},
       {type: 'range', id:"Additional Spacing", value: 0, max: 1, min: -1, step: 0.01},
       {type: 'boolean', id:"Use Specific Spacing", value: false},
       {type: 'range', id:"Specify Spacing", value: 0, max: 10, min: 0, step: 0.01}
@@ -38,6 +39,7 @@
       return 0;
     }
 
+    
     // Define an executor function that builds an array of volumes,
     // and passes it to the provided success callback, or invokes the failure
     // callback if unable to do so
@@ -66,24 +68,71 @@
       }
       selectedVolumes_sorted = getSelectedVolumes(args.volumes, args.selectedVolumeIds);
       
-      if(params["Spacing Type"] == "Vertical" || params["Spacing Type"] == "Both") {
+      var tmp_min = 0;
+      var tmp_max = 0;
+      
+      selectedVolumes_sorted.sort(compare_x);
+      tmp_min = Math.min.apply(Math, selectedVolumes_sorted.map(function(o) { return o.shape.center.x - o.shape.width; }));
+      tmp_max = Math.max.apply(Math, selectedVolumes_sorted.map(function(o) { return o.shape.center.x + o.shape.width; }));
+      var total_width = Math.abs(tmp_max - tmp_min);
+      var prev = 0;
+      var sum_width = selectedVolumes_sorted.reduce(function(acc, cur) {return acc + cur.shape.width}, 0);
+      var equal_space_horizontal = (total_width - sum_width) / (selectedVolumes_sorted.length - 1);
+      
+      selectedVolumes_sorted.sort(compare_y);
+      tmp_min = Math.min.apply(Math, selectedVolumes_sorted.map(function(o) { return o.shape.center.y - o.shape.height; }));
+      tmp_max = Math.max.apply(Math, selectedVolumes_sorted.map(function(o) { return o.shape.center.y + o.shape.height; }));
+      var total_height = Math.abs(tmp_max - tmp_min);
+      var sum_height = selectedVolumes_sorted.reduce(function(acc, cur) {return acc + cur.shape.height}, 0);
+      var equal_space_vertical = (total_height - sum_height) / (selectedVolumes_sorted.length - 1);
+      
+      
+      equal_space_horizontal += params["Additional Spacing"];
+      equal_space_vertical += params["Additional Spacing"];
+        
+      if(params["Use Specific Spacing"]) {
+        equal_space_horizontal = params["Specify Spacing"];
+        equal_space_vertical = params["Specify Spacing"];
+      }
+      
+      var prevval;
+      
+      if(params["Spacing Direction"] == "Vertical" || params["Spacing Direction"] == "Both") {
         
         selectedVolumes_sorted.sort(compare_y);
-        
+        prevval = 0;
         for(i = 0; i < selectedVolumes_sorted.length; i++) {
           selectedVolumes_sorted[i].shape.center.y = Min_Y + (Max_Y - Min_Y) / (selectedVolumes_sorted.length - 1) * i + params["Additional Spacing"] * i;
           if(params["Use Specific Spacing"]) {
             selectedVolumes_sorted[i].shape.center.y = Min_Y + params["Specify Spacing"] * i;
           }
+          
+          if(params["Spacing Type"] == "Space Between") {
+            if(i === 0) {
+              selectedVolumes_sorted[i].shape.center.y = Min_Y;
+            } else {
+              selectedVolumes_sorted[i].shape.center.y = prevval + equal_space_vertical + selectedVolumes_sorted[i].shape.height / 2;
+            }
+            prevval = selectedVolumes_sorted[i].shape.center.y + selectedVolumes_sorted[i].shape.height / 2;
+          }
         }
       } 
-      if(params["Spacing Type"] == "Horizontal" || params["Spacing Type"] == "Both") {
+      if(params["Spacing Direction"] == "Horizontal" || params["Spacing Direction"] == "Both") {
         selectedVolumes_sorted.sort(compare_x);
-        
+        prevval = 0;
         for(i = 0; i < selectedVolumes_sorted.length; i++) {
           selectedVolumes_sorted[i].shape.center.x = Min_X + (Max_X - Min_X) / (selectedVolumes_sorted.length - 1) * i + params["Additional Spacing"] * i;
           if(params["Use Specific Spacing"]) {
             selectedVolumes_sorted[i].shape.center.x = Min_X + params["Specify Spacing"] * i;
+          }
+          
+          if(params["Spacing Type"] == "Space Between") {
+            if(i === 0) {
+              selectedVolumes_sorted[i].shape.center.x = Min_X;
+            } else {
+              selectedVolumes_sorted[i].shape.center.x = prevval + equal_space_horizontal + selectedVolumes_sorted[i].shape.width / 2;
+            }
+            prevval = selectedVolumes_sorted[i].shape.center.x + selectedVolumes_sorted[i].shape.width / 2;
           }
         }
       }
