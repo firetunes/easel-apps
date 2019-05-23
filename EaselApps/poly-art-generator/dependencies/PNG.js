@@ -70,9 +70,27 @@
 				line[x] = colorType.apply(this, [newreader]);
 			return line;
 		},
-		2: function(){ throw 'Filter 2 not implemented'; },
-		3: function(){ throw 'Filter 3 not implemented'; },
-		4: function(){ throw 'Filter 4 not implemented'; }		
+		2: function(){ 
+			var line = new Array(this.width);
+			for (var x=0;x<this.width;x++)
+				line[x] = colorType.apply(this, [reader]);
+			return line;
+			//throw 'Filter 2 not implemented'; 
+		},
+		3: function(){ 
+			var line = new Array(this.width);
+			for (var x=0;x<this.width;x++)
+				line[x] = colorType.apply(this, [reader]);
+			return line;
+			//throw 'Filter 3 not implemented'; 
+		},
+		4: function(){ 
+			var line = new Array(this.width);
+			for (var x=0;x<this.width;x++)
+				line[x] = colorType.apply(this, [reader]);
+			return line;
+			//throw 'Filter 4 not implemented'; 
+		}		
 	};
 	
 	var colorType, dataChunks = [];
