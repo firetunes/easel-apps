@@ -13,5 +13,5 @@ var getSelectedVolumes = function(volumes, selectedVolumeIds) {
 function vectorchange(xCoord, yCoord, angle, length) {
     length = typeof length !== 'undefined' ? length : 10;
     angle = angle * Math.PI / 180; // if you're using degrees instead of radians
-    return [length * Math.cos(angle) + xCoord, length * Math.sin(angle) + yCoord]
+    return [length * Math.cos(angle) + xCoord, length * Math.sin(angle) + yCoord];
 }
