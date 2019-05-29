@@ -16,7 +16,7 @@ function vectorchange(xCoord, yCoord, angle, length) {
     return [length * Math.cos(angle) + xCoord, length * Math.sin(angle) + yCoord];
 }
 
-function MaxOffset(volin, minsize, maxsize, level) {
+function FindMaxOffset(volin, minsize, maxsize, level) {
     if(level > 25) { return ((maxsize + minsize) / 2); }
     var offvol = EASEL.volumeHelper.expand([volin], (-1 * (maxsize + minsize) / 2));
     if(offvol === null) {
