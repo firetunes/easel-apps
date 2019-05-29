@@ -20,11 +20,11 @@ function FindMaxOffset(volin, minsize, maxsize, level) {
     if(level > 25) { return ((maxsize + minsize) / 2); }
     var offvol = EASEL.volumeHelper.expand([volin], (-1 * (maxsize + minsize) / 2));
     if(offvol === null) {
-      console.log('Null ' + level);
+      //console.log('Null ' + level);
       maxsize = (maxsize + minsize) / 2;
       return FindMaxOffset(volin, minsize, maxsize, level + 1);
     } else {
-      console.log('Not Null ' + level);
+      //console.log('Not Null ' + level);
       minsize = (maxsize + minsize) / 2;
       return FindMaxOffset(volin, minsize, maxsize, level + 1);
     }
