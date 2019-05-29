@@ -22,10 +22,10 @@ function FindMaxOffset(volin, minsize, maxsize, level) {
     if(offvol === null) {
       console.log('Null ' + level);
       maxsize = (maxsize + minsize) / 2;
-      return MaxOffset(volin, minsize, maxsize, level + 1);
+      return FindMaxOffset(volin, minsize, maxsize, level + 1);
     } else {
       console.log('Not Null ' + level);
       minsize = (maxsize + minsize) / 2;
-      return MaxOffset(volin, minsize, maxsize, level + 1);
+      return FindMaxOffset(volin, minsize, maxsize, level + 1);
     }
   }
