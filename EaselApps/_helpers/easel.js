@@ -336,8 +336,9 @@ EASEL.volumeHelper = (function() {
     });
   };
   
-  expand = function(subjectVolumes, delta, jointype) {
-	  var clipper = new ClipperLib.ClipperOffset();
+  expand = function(subjectVolumes, delta, jointype, miterlimit) {
+    var clipper = new ClipperLib.ClipperOffset();
+    clipper.MiterLimit = miterlimit || 3;
 	  
 	  jointype = jointype || ClipperLib.JoinType.jtMiter;
 	  
