@@ -26,7 +26,8 @@ function resizeImageData(image, width, height, algorithm) {
         default: throw new Error(`Unknown algorithm: ${algorithm}`)
     }
 
-    const result = new ImageData(width, height)
+    const result = {width: width, height: height, data: new Uint8ClampedArray(width * height * 4)};
+    //const result =  new ImageData(width, height)
 
     resize(image, result)
 
