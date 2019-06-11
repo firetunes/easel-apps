@@ -106,6 +106,10 @@
         }
         
         var newVol = EASEL.pathUtils.fromPointArrays(PtArrs);
-        Volume.shape = newVol.shape;
+        if(newVol != null) {
+          if(newVol.shape != null) {
+            Volume.shape = newVol.shape;
+          }
+        }
       });
     }
