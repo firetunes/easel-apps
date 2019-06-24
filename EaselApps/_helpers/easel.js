@@ -164,6 +164,8 @@ EASEL.volumeHelper = (function() {
     var cornerDistance, topRightCornerAngle;
     if (shape.type === "line") {
       return Math.min(shape.point1.x, shape.point2.x);
+    } else if(shape.type === "drill") {
+      return shape.center.x;
     } else {
       cornerDistance = Math.hypot(shape.width / 2, shape.height / 2);
       topRightCornerAngle = Math.atan2(shape.height / 2, shape.width / 2);
@@ -189,6 +191,8 @@ EASEL.volumeHelper = (function() {
     var cornerDistance, topRightCornerAngle;
     if (shape.type === "line") {
       return Math.max(shape.point1.x, shape.point2.x);
+    } else if(shape.type === "drill") {
+      return shape.center.x;
     } else {
       cornerDistance = Math.hypot(shape.width / 2, shape.height / 2);
       topRightCornerAngle = Math.atan2(shape.height / 2, shape.width / 2);
@@ -214,6 +218,8 @@ EASEL.volumeHelper = (function() {
     var cornerDistance, topRightCornerAngle;
     if (shape.type === "line") {
       return Math.min(shape.point1.y, shape.point2.y);
+    } else if(shape.type === "drill") {
+      return shape.center.y;
     } else {
       cornerDistance = Math.hypot(shape.width / 2, shape.height / 2);
       topRightCornerAngle = Math.atan2(shape.height / 2, shape.width / 2);
@@ -239,6 +245,8 @@ EASEL.volumeHelper = (function() {
     var cornerDistance, topRightCornerAngle;
     if (shape.type === "line") {
       return Math.max(shape.point1.y, shape.point2.y);
+    } else if(shape.type === "drill") {
+      return shape.center.y;
     } else {
       cornerDistance = Math.hypot(shape.width / 2, shape.height / 2);
       topRightCornerAngle = Math.atan2(shape.height / 2, shape.width / 2);
