@@ -98,8 +98,17 @@ function FindMaxOffset(volin, minsize, maxsize, level) {
           vol.shape = JSON.parse(JSON.stringify(nVol.shape));
           break;
         case "polygon":
-          points = [JSON.parse(JSON.stringify(vol.shape.points))];
-		  points[0].push(points[0][0]);
+		  let polypts = [];
+		  polypts.push(vol.shape.points[0]);
+		  for(let i = 1; i < vol.shape.points.length - 1; i++) {
+			  let npolypt = {x: polypts[i - 1].x + vol.shape.points[i].x, y: polypts[i - 1].y + vol.shape.points[i].y};
+			  polypts.push(npolypt);
+		  }
+		  polypts.push(polypts[0]);
+		  points = [polypts];
+		
+          //points = [JSON.parse(JSON.stringify(vol.shape.points))];
+		  //points[0].push(points[0][0]);
           nVol = EASEL.pathUtils.fromPointArrays(points);
           
           scalex = vol.shape.width / nVol.shape.width;
