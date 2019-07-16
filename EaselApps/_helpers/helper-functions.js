@@ -52,6 +52,8 @@ function FindMaxOffset(volin, minsize, maxsize, level) {
             pt.y *= scaley;
             if(pt.lh) {pt.lh.x *= scalex; pt.lh.y *= scaley;}
             if(pt.rh) {pt.rh.x *= scalex; pt.rh.y *= scaley;}
+			pt.x += vol.shape.center.x - vol.shape.width / 2;
+			pt.y += vol.shape.center.y - vol.shape.height / 2;
           });
           
           points.forEach(function(pt) {
