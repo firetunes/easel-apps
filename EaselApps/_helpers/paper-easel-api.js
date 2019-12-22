@@ -45,6 +45,8 @@
         var bounds = path.bounds;
         var scalex = shape.width / bounds.width;
         var scaley = shape.height / bounds.height;
+		if(shape.width == 0) {scalex = 1;}
+		if(shape.height == 0) {scaley = 1;}
         path.scale(scalex, scaley);
         path.position = new Point(shape.center.x, shape.center.y);
         
