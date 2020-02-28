@@ -1,0 +1,1 @@
+Allows you to merge single or multiple paths into a single path. Also allows you to smooth the resultant path.

@@ -1,0 +1,7 @@
+Allows you to rotate selected shapes about a specified point.
+
+Units are the same as your current workpiece.
+
+Rotate About allows you to choose the point to rotate your selected shapes about. Origin and Specific Point are in relation to the workpiece. The remaining options are in relation to the bounding box of the selected shapes.
+
+Specific Point only works when "Specific Point" is selected in Rotate About.

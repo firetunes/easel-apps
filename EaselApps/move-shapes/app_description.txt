@@ -1,0 +1,9 @@
+Allows you to move selected shapes from one point to another easily and accurately.
+
+Units are the same as your current workpiece.
+
+Start Point / End Point allows you to choose the point to move your selected shapes from and to. Origin and Specific Point are in relation to the workpiece. The remaining options are in relation to the bounding box of the selected shapes.
+
+Specific Point only works when "Specific Point" is selected in Start or End point.
+
+Example: to move your selected shapes 5 units to the right and 2 units up you would choose "Specific Point" for both Start and End points. Then for the specific start point, use 0,0. For the end point use 5,2. You could also use -5, -2 for the start point and 0,0 for the end point to achieve the same result.

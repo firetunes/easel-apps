@@ -1,0 +1,1 @@
+Warp the selected shape using the parameters below. Text objects are not supported. Please convert them to a standalone shape before using. (Can be done by combining the text object with a random shape of 0 depth.)

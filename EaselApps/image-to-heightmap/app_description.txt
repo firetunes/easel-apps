@@ -1,0 +1,3 @@
+Import an image and use the settings to generate a height map of your image. Max Height / Width - Resizes output to fit within these bounds. Resolution - Granularity of the resultant shape. Smaller values = more detail. Layers = 1 to 255 layers possible. Each layer is comprised of all the pixels that fall within that color range. (High number of layers will likely crash your EASEL session. Use with caution.)
+
+(All images are resized down to 1024 pixels max within the app.)

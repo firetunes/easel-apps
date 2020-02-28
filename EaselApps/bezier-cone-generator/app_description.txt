@@ -1,0 +1,1 @@
+Use http://cubic-bezier.com to generate bezier curve parameters.

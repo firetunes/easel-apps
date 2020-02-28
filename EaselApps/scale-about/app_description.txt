@@ -1,0 +1,9 @@
+Allows you to scale selected shapes about a specified point.
+
+Units are the same as your current workpiece.
+
+Scale About allows you to choose the point to scale your selected shapes about. Origin and Specific Point are in relation to the workpiece. The remaining options are in relation to the bounding box of the selected shapes.
+
+Specific Point only works when "Specific Point" is selected in Scale About.
+
+Scale By allows you to choose how to scale your shapes. You can specify a scale factor in decimals, or a new height or width for your design.

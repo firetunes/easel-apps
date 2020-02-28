@@ -1,0 +1,1 @@
+Allows you to extract a portion of the outermost path of a shape. This app will return an open path per the parameters specified.

@@ -1,0 +1,1 @@
+Perform boolean operations without losing the underling curve geometry. 

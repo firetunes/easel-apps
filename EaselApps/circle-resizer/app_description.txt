@@ -1,0 +1,1 @@
+Resize circles in your entire design or your selection set by a specified offset or to a target value. If you have shapes selected, the app will only search for circles to resize in that selection set. If no shapes are selected, the app will search the entire design for circles based on the criteria below.

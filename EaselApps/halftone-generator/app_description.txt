@@ -1,0 +1,1 @@
+App based on https://xoihazard.com/tools/halftone/

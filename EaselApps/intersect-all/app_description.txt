@@ -1,0 +1,1 @@
+The top most volume in the selection set will be used to intersect with the remaining selected volumes, so long as those volumes lie beneath the topmost volume. An example would be placing a circle on top of a series of shapes and only keeping whatever lies within the circle.

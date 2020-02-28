@@ -1,0 +1,1 @@
+Explodes a shape into its components. Deletes the original shape.

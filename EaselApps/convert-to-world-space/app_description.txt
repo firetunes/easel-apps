@@ -1,0 +1,1 @@
+Converts the selected Item(s) to world space. (Removes rotations, scaling, and flipping.)
