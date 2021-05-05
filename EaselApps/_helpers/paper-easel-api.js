@@ -75,7 +75,8 @@
 			// Only works with paths, not compound paths
 			if(Volume.shape.points.length == 1) {
 				// Only one path, could be an open line
-				if(Volume.shape.points[0][0] != Volume.shape.points[0][Volume.shape.points.length-1]) {
+				if(Volume.shape.points[0][0].x != Volume.shape.points[0][Volume.shape.points.length-1].x ||
+				Volume.shape.points[0][0].y != Volume.shape.points[0][Volume.shape.points.length-1].y) {
 					// End points are not equal
 					isClosed = false;
 				}
