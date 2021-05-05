@@ -70,6 +70,17 @@
         var SegArr = [];
       
         var nPath = Volume.PaperPath;
+		var isClosed = true;
+		if(nPath.className == 'Path') {
+			// Only works with paths, not compound paths
+			if(Volume.shape.points.length == 1) {
+				// Only one path, could be an open line
+				if(Volume.shape.points[0][0] != Volume.shape.points[0][Volume.shape.points.length-1]) {
+					// End points are not equal
+					isClosed = false;
+				}
+			}
+		}
         
         switch(nPath.className) {
           case 'Path':
@@ -84,7 +95,10 @@
               };
               PtArr.push(point);
             });
-            PtArr.push(PtArr[0]);
+			if(isClosed) {
+				PtArr.push(PtArr[0]);
+			}
+            
             PtArrs.push(PtArr);
             break;
           case 'CompoundPath':
