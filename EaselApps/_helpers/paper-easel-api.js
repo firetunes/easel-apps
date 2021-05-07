@@ -70,18 +70,16 @@
         var SegArr = [];
       
         var nPath = Volume.PaperPath;
-		var isClosed = true;
-		if(nPath.className == 'Path') {
-			// Only works with paths, not compound paths
-			if(Volume.shape.points.length == 1) {
-				// Only one path, could be an open line
-				if(Volume.shape.points[0][0].x != Volume.shape.points[0][Volume.shape.points[0].length-1].x ||
-				Volume.shape.points[0][0].y != Volume.shape.points[0][Volume.shape.points[0].length-1].y) {
-					// End points are not equal
-					isClosed = false;
-				}
-			}
-		}
+        var isClosed = true;
+        if(nPath.className == 'Path') {
+          // Only works with paths, not compound paths
+          var FSeg = nPath.segments[0];
+          var LSeg = nPath.segments[nPath.segments.length - 1];
+          
+          if(FSeg.point.x != LSeg.point.x || FSeg.point.y != LSeg.point.y ) {
+            isClosed = false;
+          }
+        }
         
         switch(nPath.className) {
           case 'Path':
